@@ -434,19 +434,22 @@ class VRM_API:
         data_packet = {'username': self.username,
                        'password': self.password}
 
-        result = requests.post(self.AUTH_ENDPOINT, json=data_packet)
+        try:
+            result = requests.post(self.AUTH_ENDPOINT, json=data_packet)
 
-        if result.status_code == 200:
-            response_json = result.json()
-            self._auth_token = response_json['token']
-            self.user_id = response_json['idUser']
-            logger.debug('API initialized with token %s' % self._auth_token)
-            return True
-        elif result.status_code == 401:
-            logger.error("Unable to authenticate")
-            return False
-        else:
-            logger.error("Problem authenticating status code:%s  text:%s" % (result.status_code, result.text))
+            if result.status_code == 200:
+                response_json = result.json()
+                self._auth_token = response_json['token']
+                self.user_id = response_json['idUser']
+                logger.debug('API initialized with token %s' % self._auth_token)
+                return True
+            elif result.status_code == 401:
+                logger.error("Unable to authenticate")
+                return False
+            else:
+                logger.error("Problem authenticating status code:%s  text:%s" % (result.status_code, result.text))
+                return False
+        except Exception:
             return False
 
     def _login_as_demo(self):
@@ -511,6 +514,7 @@ class VRM_API:
 
         except Exception:
             logger.exception("Error with getting request")
+            return {}
 
         
         

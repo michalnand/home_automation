@@ -40,3 +40,5 @@ CAMOutputs
 
 #login
 login.py
+
+*.log
