@@ -12,6 +12,7 @@ if __name__ == "__main__":
     error_logger = Logger("logs/error.log")
     state_logger = Logger("logs/state.log")
     power_logger = Logger("logs/power.log") 
+    load_logger  = Logger("logs/load.log") 
 
     charge_on   = 90.0
     charge_off  = 80.0
@@ -106,18 +107,22 @@ if __name__ == "__main__":
 
             power_logger.add(power_log)
             
+            load_logger_str = ""
             
             #too low battery
             if charge < charge_off:
                 load_manager.remove_all()
+                load_logger_str+= "remove_all : charge < charge_off"
 
             #too much power from grid, remove one load
             elif total_ip > total_ip_max:
                 load_manager.remove_load()
+                load_logger_str+= "remove_load : total_ip > total_ip_max"
 
             #turn new device on
             elif charge > charge_on:
                 load_manager.add_load()
+                load_logger_str+= "add_load : charge > charge_on"
 
             #log status
             if load_manager.change():
@@ -141,11 +146,14 @@ if __name__ == "__main__":
 
 
                 state_log+= "load_manager\n"
-                state_log+= load_manager.get_state()
+                state_log+= load_manager.get_state() + "\n"
+                state_log+= load_logger_str + "\n"
                 state_log+= "\n"
 
                 state_log+= "\n"
                 state_logger.add(state_log)
+
+                load_logger.add(load_logger_str)
 
 
             time_stop = time.time()

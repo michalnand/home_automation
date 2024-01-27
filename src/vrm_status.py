@@ -61,14 +61,17 @@ class VRMStatus:
             return None
 
     def get_inverter_state(self):
-        stats  = self.vrm_api.graph_widgets(self.instalation_id, measurement_codes = ["IP1", "OP1", "IP2", "OP2", "IP3", "OP3"])
+        try:
+            stats  = self.vrm_api.graph_widgets(self.instalation_id, measurement_codes = ["IP1", "OP1", "IP2", "OP2", "IP3", "OP3"])
 
-        ip1 = float(stats["records"]["data"]["17"][-1][1])
-        op1 = float(stats["records"]["data"]["29"][-1][1])
-        ip2 = float(stats["records"]["data"]["18"][-1][1])
-        op2 = float(stats["records"]["data"]["30"][-1][1])
-        ip3 = float(stats["records"]["data"]["19"][-1][1])
-        op3 = float(stats["records"]["data"]["31"][-1][1])
+            ip1 = float(stats["records"]["data"]["17"][-1][1])
+            op1 = float(stats["records"]["data"]["29"][-1][1])
+            ip2 = float(stats["records"]["data"]["18"][-1][1])
+            op2 = float(stats["records"]["data"]["30"][-1][1])
+            ip3 = float(stats["records"]["data"]["19"][-1][1])
+            op3 = float(stats["records"]["data"]["31"][-1][1])
 
-        return ip1, op1, ip2, op2, ip3, op3
+            return ip1, op1, ip2, op2, ip3, op3
+        except Exception:
+            return None
 

@@ -6,6 +6,7 @@ class LoadManager:
         self.loads_count  = loads_count
         self.load_level   = 0
         self.is_change    = True
+        self.logger       = ""
 
         self.remove_all()
 
@@ -40,3 +41,6 @@ class LoadManager:
     
     def get_state(self):
         return "loads_count = " + str(self.load_level)
+    
+
+    def get_log(self):
