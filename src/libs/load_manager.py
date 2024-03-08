@@ -1,5 +1,5 @@
-from .io_ports_mock import *
-#from .io_ports import *
+#from .io_ports_mock import *
+from .io_ports import *
 
 
 class LoadManager:
