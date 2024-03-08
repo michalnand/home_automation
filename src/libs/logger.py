@@ -7,9 +7,11 @@ from datetime import datetime
 
 class Logger:
 
-    def __init__(self, name):
+    def __init__(self, prefix, name):
 
-        path = pathlib.Path().absolute()
+        path = os.path.join(pathlib.Path().absolute(), pathlib.Path(prefix))
+
+        print("creating path ", path)
 
         exist = os.path.exists(path)
         if not exist:

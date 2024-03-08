@@ -3,14 +3,24 @@ import libs
 
 import login
 
+from datetime import datetime
 
 if __name__ == "__main__":
-    error_logger = libs.Logger("logs/error.log")
-    state_logger = libs.Logger("logs/state.log")
-    power_logger = libs.Logger("logs/power.log") 
-    load_logger  = libs.Logger("logs/load.log") 
 
-    #baterry status when turn on
+    logs_prefix =  str(datetime.utcfromtimestamp(time.time()))
+    logs_prefix = logs_prefix.replace("'", "")
+    logs_prefix = logs_prefix.replace(" ", "_")
+
+    print(logs_prefix)
+
+    logs_prefix = "logs/" + logs_prefix
+
+    error_logger = libs.Logger(logs_prefix, "/error.log")
+    state_logger = libs.Logger(logs_prefix, "/state.log")
+    power_logger = libs.Logger(logs_prefix, "/power.log") 
+    load_logger  = libs.Logger(logs_prefix, "/load.log") 
+
+    #baterry status when turn on    
     charge_on   = 92.0 
 
     #baterry status when turn off
@@ -20,7 +30,7 @@ if __name__ == "__main__":
     total_ip_max = 600.0
  
     #time step, in seconds
-    dt = 1
+    dt = 10
 
     load_manager = libs.LoadManager()
 
@@ -32,6 +42,13 @@ if __name__ == "__main__":
 
     #main loop
     while True:
+        #too many tries, exiting
+        if readings_repetitions > 10:
+            load_manager.remove_all()
+            error_logger.add("too many readings repetitions")
+            error_logger.add("exiting")
+            exit(1)
+
         time_start = time.time()
         
         while time.time() < time_start + dt:
@@ -39,34 +56,25 @@ if __name__ == "__main__":
             load_manager.led_on(0)
             time.sleep(0.2)
             load_manager.led_on(1)
-            time.sleep(0.2)
+            time.sleep(0.8)
 
-        if readings_repetitions > 10:
-            load_manager.remove_all()
-            error_logger.add("too much readings repetitions")
-            error_logger.add("exiting")
-            exit(1)
-
+        
         instalation_id = login.instalation_id
         vrm_api = libs.VRM_API(username=login.username, password=login.password)
 
         if vrm_api._initialized != True:
             load_manager.remove_all()
             error_logger.add("API not initialized")
-            error_logger.add("exiting")
-            exit(1)
+            readings_repetitions+= 1
+            continue
 
         vrm_status = libs.VRMStatus(vrm_api, instalation_id)
 
         if vrm_status.api_ready != True:
             load_manager.remove_all()
             error_logger.add("API not ready")
-            error_logger.add("exiting")
-            exit(1)
-
-
-        error_logger.add("API ready")
-
+            readings_repetitions+= 1
+            continue
 
         result = vrm_status.get_battery_state()
         if result is None:

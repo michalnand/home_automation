@@ -1,3 +1,10 @@
 cd $HOME/projects/home_automation/src/
-python3 main.py
+
+while true
+do
+    python3 main.py
+    sleep 5
+done
+
 cd 
+ 
