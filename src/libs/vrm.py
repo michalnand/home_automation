@@ -1,7 +1,7 @@
 # Main imports
 import requests
 import logging
-from utils import datetime_to_epoch
+from .utils import datetime_to_epoch
 
 # setup Logger
 logger = logging.getLogger(__name__)

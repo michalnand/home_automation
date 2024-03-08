@@ -1,3 +1,4 @@
+import os
 import pathlib 
 import time
 
@@ -9,6 +10,10 @@ class Logger:
     def __init__(self, name):
 
         path = pathlib.Path().absolute()
+
+        exist = os.path.exists(path)
+        if not exist:
+            os.makedirs(path)
 
         self.f_name = str(path) + "/" + name
 

@@ -7,15 +7,15 @@ class Predictor:
     # dt step in [s]
     def __init__(self, battery_capacity, dt):
 
+        #convert to joules
         self.battery_capacity = battery_capacity*3600.0
         self.dt  = dt
 
         # discrete battery model
-        # x(n+1)  = x(n) + k*u(n)
+        # x(n+1)  = x(n) + u(n)
 
         self.mat_a = numpy.zeros((1, 1))
         self.mat_b = numpy.zeros((1, 1))
-
 
         self.mat_a[0][0] = 1.0
         self.mat_b[0][0] = dt
@@ -35,23 +35,28 @@ class Predictor:
         #initial prediction
         self.x_hat = None 
     
-    # p_in : input power in [W]
-    # sc_measured : meassured state of charge in [%]
-    # sc_req      : required state of charge in  [%]
-    #
-    # returns 
-    #   - time in seconds, until battery reach required state of charge
-    #   - if not reached in prediction horizon, returns -1
+    '''
+    input:
+        p_in : input power in [W]
+        sc_measured : meassured state of charge in [%]
+        sc_req      : required state of charge in  [%]
+    
+    returns 
+      - time in seconds, until battery reach required state of charge
+      - if not reached in prediction horizon, returns -1
+    '''
     def predict_time(self, p_in, sc_measured, sc_req, max_hours = 12):
         n_steps = int(max_hours*3600/self.dt)
 
+        #convert initial state of charge into joules
         q_measured   = self.battery_capacity*sc_measured/100.0
 
         q_prediction = self.predict(p_in, q_measured, n_steps)
 
-        # convert stored energy into state of charge
+        #convert stored joules energy into state of charge
         c_prediction = 100.0*(q_prediction/self.battery_capacity)
     
+        #find where SoC reached threshold
         th = numpy.where(c_prediction > sc_req)[0]
 
         if len(th) > 0:
