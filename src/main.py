@@ -54,8 +54,11 @@ if __name__ == "__main__":
         while time.time() < time_start + dt:
             print("waiting")
             load_manager.led_on(0)
-            time.sleep(0.2)
             load_manager.led_on(1)
+            time.sleep(0.2)
+            
+            load_manager.led_off(0)
+            load_manager.led_off(1)
             time.sleep(0.8)
 
         
