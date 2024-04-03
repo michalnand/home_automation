@@ -139,7 +139,7 @@ if __name__ == "__main__":
         power_log+= str(total_ip) + " "
         power_log+= str(total_op) + " "
 
-        power_logger.add(power_log)
+        
         
         load_logger_str = ""
 
@@ -164,6 +164,7 @@ if __name__ == "__main__":
 
         #log status
         if load_manager.change():
+            power_logger.add(power_log)
 
             state_log = "\n"
             state_log+= "battery\n"
