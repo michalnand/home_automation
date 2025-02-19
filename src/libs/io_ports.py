@@ -3,9 +3,30 @@ import smbus
 
 import time
 
+
+def check_devices(channel, device = [0x20, 0x21]):
+    bus = smbus.SMBus(channel)
+
+    detected_devices = []
+    errors = []
+    for adr in device:
+        try:
+            #output to zero
+            bus.write_byte_data(adr, 0x01, 0)
+            detected_devices.append(adr)
+            
+            result_str = "I2C OK for " + str(bus) + " " + str(channel) + " " + str(adr)            
+            print(result_str)
+        except:
+            result_str = "error i2c communicating on bus " + str(bus) + " " + str(channel) + " " + str(adr)            
+            errors.append(result_str)
+            print(result_str)
+
+    return detected_devices, errors
+
+
 class IOPorts:
-    def __init__(self, device = [0x20, 0x21]):
-        channel = 1
+    def __init__(self, channel, device = [0x20, 0x21]):
         self.bus = smbus.SMBus(channel)
 
         self.devices = device

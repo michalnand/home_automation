@@ -4,11 +4,13 @@ from .io_ports import *
 
 class LoadManager:
 
-    def __init__(self):
+    def __init__(self, i2c_bus):
         print("LoadManager : init")
 
         self.boards   = [0x20, 0x21]
-        self.io_ports = IOPorts(self.boards)
+
+
+        self.io_ports = IOPorts(i2c_bus, self.boards)
 
         self.priority_board  = [1, 0, 1, 0, 1, 0]
         self.priority_pin    = [0, 0, 1, 1, 2, 2]

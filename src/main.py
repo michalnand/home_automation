@@ -7,6 +7,21 @@ from datetime import datetime
 
 if __name__ == "__main__":
 
+    '''
+        i2c0 : 
+            add for enable :
+                sudo nano /boot/firmaware/config.txt
+                dtparam=i2c_vc=on
+                reboot
+            check : 
+                sudo i2cdetect -l
+
+            pins: 
+                GPIO0 : sda, num 27
+                GPIO1 : scl, num 28
+    '''
+    i2c_bus = 0 
+
     logs_prefix =  str(datetime.utcfromtimestamp(time.time()))
     logs_prefix = logs_prefix.replace("'", "")
     logs_prefix = logs_prefix.replace(" ", "_")
@@ -32,7 +47,25 @@ if __name__ == "__main__":
     #time step, in seconds
     dt = 10
 
-    load_manager = libs.LoadManager()
+    # check devices I2C connection
+
+    '''
+    while True:
+        active_devices, errors = libs.check_devices(1)
+        active_devices, errors = libs.check_devices(i2c_bus)
+        time.sleep(0.2)
+    '''
+
+    active_devices, errors = libs.check_devices(i2c_bus)
+
+    if len(errors) != 0:
+        for e in errors:
+            error_logger.add(e)
+        
+        error_logger.add("exiting")
+        exit(1)
+
+    load_manager = libs.LoadManager(i2c_bus)
 
     load_manager.led_on(0)
     load_manager.led_on(1)
