@@ -22,11 +22,13 @@ if __name__ == "__main__":
     '''
     i2c_bus = 0 
 
-    logs_prefix =  str(datetime.utcfromtimestamp(time.time()))
+    #logs_prefix =  str(datetime.utcfromtimestamp(time.time()))
+    logs_prefix = datetime.fromtimestamp(time.time()).astimezone()
+    logs_prefix = str(logs_prefix)
+
     logs_prefix = logs_prefix.replace("'", "")
     logs_prefix = logs_prefix.replace(" ", "_")
 
-    print(logs_prefix)
 
     logs_prefix = "logs/" + logs_prefix
 
@@ -36,10 +38,10 @@ if __name__ == "__main__":
     load_logger  = libs.Logger(logs_prefix, "/load.log") 
 
     #baterry status when turn on    
-    charge_on   = 92.0 
+    charge_on   = 90.0 
 
     #baterry status when turn off
-    charge_off  = 90.0
+    charge_off  = 87.0
     
     #maximum power from grid to turn off
     total_ip_max = 600.0
@@ -132,10 +134,12 @@ if __name__ == "__main__":
             result = vrm_status.get_mppt_state(instance)
             mppt_power.append(result)
 
+        
         if None in mppt_power:
             error_logger.add("mppt state reading error")
             readings_repetitions+= 1
             continue
+        
 
         print("mppt")
         print(mppt_power)

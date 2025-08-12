@@ -1,13 +1,15 @@
 
 def check_devices(channel = 1, device = [0x20, 0x21]):
     detected_devices = []
+    errors = []
     for adr in device:
         detected_devices.append(adr)
         
-    return detected_devices
+        
+    return detected_devices, errors
 
 class IOPorts:
-    def __init__(self, device = [0x20, 0x21]):
+    def __init__(self, channel, device = [0x20, 0x21]):
         #print("IOPorts init ", device)
         pass
      

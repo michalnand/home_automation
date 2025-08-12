@@ -27,7 +27,8 @@ class Logger:
         t = time.time()
 
         result = "" 
-        result+= str(datetime.utcfromtimestamp(t)) + " "
+        time_stamp = datetime.fromtimestamp(time.time()).astimezone()
+        result+= str(time_stamp) + " "
         result+= str(t) + " "
         result+= str(value) + "\n"
 
