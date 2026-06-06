@@ -80,8 +80,12 @@ if __name__ == "__main__":
 
     readings_repetitions = 0
 
+    samples_cnt = 0
+
     #main loop
     while True:
+        
+
         #too many tries, exiting
         if readings_repetitions > 10:
             load_manager.remove_all()
@@ -114,6 +118,8 @@ if __name__ == "__main__":
             error_logger.add("API not ready, error code " + str(error_code))
             readings_repetitions+= 1
             continue
+
+        samples_cnt+= 1
         
         voltage = vrm_status["battery"]["voltage"]
         current = vrm_status["battery"]["current"]
@@ -226,7 +232,8 @@ if __name__ == "__main__":
 
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        vrm_status["relay_state"] = load_manager.is_on()
-        history_logger.update(vrm_status)
+        if (samples_cnt%10) == 0:
+            vrm_status["relay_state"] = load_manager.is_on()
+            history_logger.update(vrm_status)
 
 
