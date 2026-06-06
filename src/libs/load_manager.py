@@ -78,6 +78,9 @@ class LoadManager:
 
         return result
     
+    def is_on(self):
+        return any(self.state)
+    
 
     def _update_state(self):
         for i in range(len(self.state)):

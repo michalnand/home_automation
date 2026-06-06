@@ -1,16 +1,13 @@
-
 import requests
 import json
 
-class VRMAPI:
 
+class VRMAPI:
 
     def __init__(self, instalation_id, token):
         self.instalation_id = instalation_id
         self.token = token
 
-
-   
     def get(self):
         raw_data = self._get_raw_data()
 

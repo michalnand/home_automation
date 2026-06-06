@@ -1,4 +1,6 @@
 {
+  "timestamp" : null,
+  "heating_system" : 0,
   "battery": {
     "voltage": 50.81,
     "current": 67.0,

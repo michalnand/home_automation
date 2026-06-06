@@ -3,7 +3,10 @@ import libs
 
 import login
 
+from vrm_api import *
+
 from datetime import datetime
+
 
 if __name__ == "__main__":
 
@@ -36,6 +39,8 @@ if __name__ == "__main__":
     state_logger = libs.Logger(logs_prefix, "/state.log")
     power_logger = libs.Logger(logs_prefix, "/power.log") 
     load_logger  = libs.Logger(logs_prefix, "/load.log") 
+
+    history_logger = libs.HistoryLogger("logs/history.log", 60480)
 
     #baterry status when turn on    
     charge_on   = 90.0 
@@ -99,7 +104,7 @@ if __name__ == "__main__":
         
         instalation_id = login.instalation_id
        
-        vrm_api = libs.VRMAPI(login.instalation_id, login.token)
+        vrm_api = VRMAPI(login.instalation_id, login.token)
 
       
         vrm_status, error_code = vrm_api.get()
@@ -218,5 +223,10 @@ if __name__ == "__main__":
             state_logger.add(state_log)
 
             load_logger.add(load_logger_str)
+
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        vrm_status["relay_state"] = load_manager.is_on()
+        history_logger.update(vrm_status)
 
 
