@@ -13,17 +13,17 @@ class VRM_API:
     # Get this
     RETRY = 3
 
-    def __init__(self, username=None, password=None, demo=False):
+    def __init__(self, username=None,  token=None, demo=False):
         """
         Initialise API for Victron VRM
         @param - username
-        @param - password
+        @param - token
         """
 
         self._initialized = False
-        self.API_ENDPOINT = 'https://vrmapi.victronenergy.com'
+        self.API_ENDPOINT = 'https://vrmapi.victronenergy.com/v2'
 
-        self._auth_token = ''
+        self._auth_token = token
         self._ses = requests.Session()
         self.user_id = ''
 
@@ -42,11 +42,10 @@ class VRM_API:
         if demo:  # Login as demo else with credentials
             self._initialized = self._login_as_demo()
         else:
-            if username and password:
+            if username and token:
                 self.username = username
-                self.password = password
             else:
-                raise Exception('No username or password provided')
+                raise Exception('No username or token provided')
 
             logger.debug('Initializing API with username %s ' % self.username)
             self._initialized = self._login()
@@ -431,8 +430,26 @@ class VRM_API:
         """
         Login to API and get token
         """
-        data_packet = {'username': self.username,
-                       'password': self.password}
+        #data_packet = {'username': self.username, 'password': self.password}
+        
+        
+
+        headers = {'X-Authorization': "Bearer %s" % self._auth_token}
+
+
+        try:
+            result = requests.get(self.QUERY_ENDPOINT, headers=headers)
+            if result.status_code == 200:
+                data = result.json()
+                print("Successfully fetched data!")
+                return True
+            else:
+                print(f"Error: {result.status_code} - {result.text}")
+                return False
+        except Exception as e:
+            print(f"Connection failed: {e}")
+            return False
+
 
         try:
             result = requests.post(self.AUTH_ENDPOINT, json=data_packet)

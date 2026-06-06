@@ -98,61 +98,50 @@ if __name__ == "__main__":
 
         
         instalation_id = login.instalation_id
-        vrm_api = libs.VRM_API(username=login.username, password=login.password)
+       
+        vrm_api = libs.VRMAPI(login.instalation_id, login.token)
 
-        if vrm_api._initialized != True:
+      
+        vrm_status, error_code = vrm_api.get()
+
+        if error_code != 0:
             load_manager.remove_all()
-            error_logger.add("API not initialized")
+            error_logger.add("API not ready, error code " + str(error_code))
             readings_repetitions+= 1
             continue
-
-        vrm_status = libs.VRMStatus(vrm_api, instalation_id)
-
-        if vrm_status.api_ready != True:
-            load_manager.remove_all()
-            error_logger.add("API not ready")
-            readings_repetitions+= 1
-            continue
-
-        result = vrm_status.get_battery_state()
-        if result is None:
-            error_logger.add("battery state reading error")
-            readings_repetitions+= 1
-            continue
-
-        voltage, current, charge = result
+        
+        voltage = vrm_status["battery"]["voltage"]
+        current = vrm_status["battery"]["current"]
+        charge  = vrm_status["battery"]["soc"]
+        health  = vrm_status["battery"]["soh"]
 
         print("battery")
         print("voltage = " + str(voltage) + "V")
         print("current = " + str(current) + "A")
         print("charge  = " + str(charge) +  "%")
+        print("health  = " + str(health) +  "%")
         print("\n\n\n")
 
 
         mppt_power = []
-        for instance in vrm_status.devices["Solar Charger"]:
-            result = vrm_status.get_mppt_state(instance)
-            mppt_power.append(result)
+        for mppt in vrm_status["mppts"]:
+            mppt_power.append(mppt["power"])
 
-        
-        if None in mppt_power:
-            error_logger.add("mppt state reading error")
-            readings_repetitions+= 1
-            continue
-        
 
         print("mppt")
         print(mppt_power)
         print("\n\n")
 
 
-        result = vrm_status.get_inverter_state()
-        if result is None:
-            error_logger.add("inverter state reading error")
-            readings_repetitions+= 1
-            continue
+        ip1 = vrm_status["inverters"][0]["p_in"]
+        op1 = vrm_status["inverters"][0]["p_out"]
+        
+        ip2 = vrm_status["inverters"][1]["p_in"]
+        op2 = vrm_status["inverters"][1]["p_out"]
+        
+        ip3 = vrm_status["inverters"][2]["p_in"]
+        op3 = vrm_status["inverters"][2]["p_out"]
 
-        ip1, op1, ip2, op2, ip3, op3 = result
 
         total_ip = ip1 + ip2 + ip3
         total_op = op1 + op2 + op3

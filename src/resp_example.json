@@ -1,0 +1,68 @@
+{
+  "battery": {
+    "voltage": 50.81,
+    "current": 67.0,
+    "temperature": 25.0,
+    "soc": 78.0,
+    "soh": 94.0
+  },
+  "mppts": [
+    {
+      "id": "HQ2121DQU4E",
+      "voltage": 51.3,
+      "current": 4.8,
+      "power": 254.0,
+      "error_code": "No error"
+    },
+    {
+      "id": "HQ2131YMEUW",
+      "voltage": 51.3,
+      "current": 6.5,
+      "power": 343.0,
+      "error_code": "No error"
+    },
+    {
+      "id": "HQ2131744GC",
+      "voltage": 51.3,
+      "current": 34.9,
+      "power": 1831.0,
+      "error_code": "No error"
+    },
+    {
+      "id": "HQ2145HX7AE",
+      "voltage": 51.3,
+      "current": 34.9,
+      "power": 1830.0,
+      "error_code": "No error"
+    }
+  ],
+  "inverters": [
+    {
+      "p_in": -154.0,
+      "u_in": 236.7,
+      "i_in": -1.0,
+      "f_in": 50.1,
+      "p_out": 33.0,
+      "u_out": 236.7,
+      "i_out": 0.1
+    },
+    {
+      "p_in": 94.0,
+      "u_in": 236.6,
+      "i_in": 0.8,
+      "f_in": 50.1,
+      "p_out": 278.0,
+      "u_out": 236.6,
+      "i_out": 1.8
+    },
+    {
+      "p_in": 36.0,
+      "u_in": 237.7,
+      "i_in": 0.6,
+      "f_in": 50.1,
+      "p_out": 252.0,
+      "u_out": 237.7,
+      "i_out": 1.8
+    }
+  ]
+}
